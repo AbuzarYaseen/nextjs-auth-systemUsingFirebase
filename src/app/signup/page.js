@@ -16,6 +16,7 @@ const Signup = () => {
     number: "",
     password: "",
   });
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
     setFormValues({
@@ -35,16 +36,20 @@ const Signup = () => {
         password
       );
       console.log("User signed up:", userCredential);
-      router.push("/login");
 
       const user = userCredential.user;
 
       // Send email verification
       await sendEmailVerification(user);
+      setSuccess(
+        "Signup successful! Please check your email to verify your account."
+      );
       console.log(
         "Signup successful! Please check your email to verify your account."
       );
-
+      setTimeout(() => {
+        router.push("/login");
+      }, 5000);
       // Save additional user info in Firestore
       await setDoc(doc(db, "users", user.uid), {
         firstName: firstName,
@@ -111,6 +116,7 @@ const Signup = () => {
           >
             Sign Up
           </button>
+          {success && <p className="text-green-600">{success}</p>}
         </form>
       </div>
       <p className="text-[14px]">
